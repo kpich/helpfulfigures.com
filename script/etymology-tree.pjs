@@ -1,0 +1,244 @@
+/**
+  *  etymtree.pjs
+  *  Some stupid code (written for John Resig's hella fun processing.js) for a stupid thing.
+  *  Karl Pichotta, 2010. Do whatever the heck you want with this code.
+  */
+
+boolean curDetailing;
+ArrayList nodes;
+
+void setup() {
+    curDetailing = false;
+    size(1100,800);
+    unmarshalGraph();
+    drawFreshTree();
+}
+
+void mouseMoved() {
+    Node n = getFocusNode();
+    if(n != null) {
+        if(!curDetailing) {
+            curDetailing = true;
+            n.displayDetail();
+        }
+    }
+    else {
+        if(curDetailing) drawFreshTree();
+        curDetailing = false;
+    }
+}
+
+void drawFreshTree() {
+    fill(255)
+    background(255)
+    strokeWeight(1);
+    for(int i = 0; i < edges.length(); i++) {
+        edges[i].display();
+    }
+    for(int i = 0; i < nodes.length(); i++) {
+        nodes[i].displayNormal();
+    }
+}
+
+
+/*
+    This is currently O(n). TODO: change this to two sorted lists (top to bottom, left to right)
+    and use a binary search. This will be O(log n).
+*/
+void getFocusNode() {
+    for(int i = 0; i < nodes.length(); i++) {
+        if(nodes[i].isInBounds(mouseX, mouseY)) return nodes[i];
+    }
+    return null;
+}
+
+
+void unmarshalGraph() {
+    ArrayList ns = new ArrayList();
+    ArrayList es = new ArrayList();
+    Data d = new Data();
+    Arraylist edges = new ArrayList();
+    for(int i = 0; i < d.lines.length(); i ++ ) {
+        if(d.lines[i][0] == "V") {
+            String[] parts = d.lines[i].split("|");
+            ns.add(new Node(parts[1], parts[2], parts[5], parseFloat(parts[3]), parseFloat(parts[4])));
+        } else if(d.lines[i][0] == "E") {
+            edges.add(d.lines[i]);
+        }
+    }
+    for(int i = 0; i < edges.length(); i++) {
+        String[] parts = edges[i].split("|");
+        es.add(new Edge(findNodeById(ns, parts[1]), findNodeById(ns, parts[2])));
+    }
+    this.nodes = ns;
+    this.edges = es;
+}
+
+/** Really efficient.
+  */
+Node findNodeById(ArrayList nodes, String id) {
+    for(int i = 0; i < nodes.length(); i++) {
+        if(nodes[i].id == id) return nodes[i];
+    }
+    return null;
+}
+
+
+class Node {
+    static int RADIUS = 12;
+    static int TEXT_LH_MARGIN = 5;
+    static int TEXT_TOP_MARGIN = 17;
+    static int NORMAL_FONT_SIZE = 16;
+    static int DETAILS_FONT_SIZE = 14;
+    static int DETAILS_WIDTH = 350;
+    static int DETAILS_HEIGHT = 100;
+    static int DETAILS_LINE_HEIGHT = 16;
+    static int NORMAL_LINE_HEIGHT = 15;
+    static int AVG_NORMAL_WIDTH = 60;
+
+    int x;
+    int y;
+    String id;
+    String description;
+    String details;
+
+    Node(String id, String description, String details, float x, float y) {
+        this.description = description;
+        this.details = details;
+        this.x = x;
+        this.y = y;
+        this.id = id;
+    }
+
+    void displayNormal() {
+        fill(255);
+        stroke(60);
+        strokeWeight(2);
+        ellipse(x, y, 2*RADIUS, 2*RADIUS);
+        stroke(60);
+        strokeWeight(1);
+        PFont thisFont = loadFont("Arial");
+        textFont(thisFont, NORMAL_FONT_SIZE);
+        fill(0);
+        multiLineText(description,
+                      x + RADIUS + TEXT_LH_MARGIN,
+                      y + NORMAL_LINE_HEIGHT/4);
+        //p.text(description, getTextLHS(), y);
+    }
+
+   void displayDetail() {
+        fill(255);
+        //stroke(60);
+        stroke("#F87217");
+        strokeWeight(4);
+        ellipse(this.x, this.y, 2 * this.RADIUS, 2 * RADIUS);
+        PFont thisFont = loadFont("Arial");
+        textFont(thisFont, DETAILS_FONT_SIZE);
+        String[] lines = this.details.split("$");
+        //float rectWidth = thisFont.width(this.details) * DETAILS_FONT_SIZE * 2;
+        //console.log(this.details);
+        //console.log("" + rectWidth);
+        //rect(getTextLHS(), this.y-DETAILS_HEIGHT/2, rectWidth, DETAILS_HEIGHT);
+        rect(getTextLHS(), getTextTop(), DETAILS_WIDTH, DETAILS_HEIGHT);
+        fill(0);
+        multiLineText(this.details,
+                      getTextLHS() + TEXT_LH_MARGIN,
+                      getTextTop() + TEXT_TOP_MARGIN);
+    }
+
+    boolean isInBounds(float x, float y) {
+        return (x > this.x - this.RADIUS &&
+                x < this.x + this.RADIUS + this.AVG_NORMAL_WIDTH &&
+                y > this.y - this.RADIUS &&
+                y < this.y + this.RADIUS);
+    }
+
+    void multiLineText(String str, float x, float y) {
+        String[] lines = str.split("$");
+        float cury = y;
+        for(int i = 0; i < lines.length(); i++) {
+            text(lines[i], x, cury);
+            cury += DETAILS_LINE_HEIGHT;
+        }
+    }
+
+    float getTextLHS() {
+        return min(width - DETAILS_WIDTH, x + RADIUS + TEXT_LH_MARGIN);
+    }
+
+    float getTextTop() {
+        return this.y + 10;
+       // return max(MIN_DIST_FROM_TOP, this.y - DETAILS_HEIGHT/2 + DETAILS_LINE_HEIGHT);
+    }
+}
+
+class Edge {
+    Edge(Node from, Node to) {
+        this.from = from;
+        this.to = to;
+    }
+
+    void display() {
+        strokeWeight(2);
+        stroke(100);
+        p.line(this.from.x, this.from.y, this.to.x, this.to.y);
+    }
+}
+
+
+//oh whatever, code and data are the same thing anyways, right guys? Guys?
+class Data {
+    ArrayList lines;
+    Data() {
+        lines = new ArrayList();
+        lines.add("V|1|Proto-Indo-European|500|50|\"*bhosk\":$joining/union; strife; parricide");
+        lines.add("V|2a|Latin|50|270|\"festostus\":$An insult used against a man with a stupid hat.");
+        lines.add("V|2b|Proto-Germanic|740|320|\"foxanan\":$To copulate sadly");
+        lines.add("V|2c|Greek|150|270|\"phoetoston\":$That property which explains the marked inferiority$to be found in individuals from different lands.");
+        lines.add("V|2d|Proto-Slavic|350|200|\"prožg\":$Noise; spirit; excrement; King");
+        lines.add("V|2e|Welsh|650|150|\"pwgdaer\":$Sexual congress; a type of cough suppressant; related$to the hair of a child.");
+        lines.add("V|2f|Proto-Indo-Iranian|480|200|\"bhac\":$To glare; to kick; to yell");
+        lines.add("V|2g|Hittite|750|150|\"pukkawari\":$A type of flatbread; to murder God");
+        lines.add("V|3a|French|20|500|\"fêtoulier\":$An untoward spirit visiting from the next world");
+        lines.add("V|3b|Romanian|218|500|\"featurî\":$To fight with one's fist and to subsequently kiss one's$opponent.");
+        lines.add("V|3c|Italian|430|500|\"fosotare\":$To ride a horse; to ski; to act as a catamite");
+        lines.add("V|3d|German|670|550|\"fuschen\":$To wrestle with a bear or other large, hairy mammal.");
+        lines.add("V|3e|Old English|450|550|\"veoce\":$The enmity a woman feels for a hound.");
+        lines.add("V|3f|Old Norse|780|550|\"fũkthuryaekjel\":$The endtimes (lit. 'the state in which Thor makes$sword-love with the universe-woman').");
+        lines.add("V|3g|Russian|247|350|\"Prodgobterov\":$The demiurge found in various folklore cosmogonies,$whose name is typically translated to 'He Whose$Gaze Is A Ravenous Infant.'");
+        lines.add("V|3h|Macedonian|350|350|\"voljušen\":$A traditional game in which a man flogs the head of a$horse with a stick.");
+        lines.add("V|3i|Sogdian|480|350|\"brs'cyw\":$Cupidity; ox; candle; the name given to a celebrated$(but now lost) folklore collection of erotic horse poetry.");
+        lines.add("V|3j|Sanskrit|580|350|\"bhāk\":$Order; reasoning; sexual relations; a warrior's$assistant; nectar; a young female's neckline; slander;$fecundity; compassion; food which has not yet touched$the ground; river; meteor; human-shaped object");
+        lines.add("V|3k|Catalan|118|500|\"fosostá\"$Longing for death; extreme happiness");
+        lines.add("V|3l|Spanish|330|500|\"fosostero\"$A man who has promised wealth to his family but has$failed to make good upon this promise; one who$habitually wears no shirt");
+        lines.add("V|3m|Frisian|580|550|\"waege\":$The name of a female demon said to rape men in$dreams and, further, to transmute various crops into$bees");
+        lines.add("V|4a|Icelandic|680|650|\"pokjamóðir\":$Term of endearment used to refer to one's maternal$grandmother (Cf. Faroese 'slutmother').");
+        lines.add("V|4b|Swedish|570|650|\"fongivet\":$An honorific for a man who wears a mustache.");
+        lines.add("V|4c|English|450|650|\"fuck\":$fuck");
+        lines.add("V|4d|Norwegian|780|650|\"fege\":$To live the Metal lifestyle");
+        lines.add("E|1|2a");
+        lines.add("E|1|2b");
+        lines.add("E|1|2c");
+        lines.add("E|1|2d");
+        lines.add("E|1|2e");
+        lines.add("E|1|2f");
+        lines.add("E|1|2g");
+        lines.add("E|2a|3a");
+        lines.add("E|2a|3b");
+        lines.add("E|2a|3c");
+        lines.add("E|2a|3k");
+        lines.add("E|2a|3l");
+        lines.add("E|2b|3d");
+        lines.add("E|2b|3e");
+        lines.add("E|2b|3f");
+        lines.add("E|2d|3g");
+        lines.add("E|2d|3h");
+        lines.add("E|2f|3i");
+        lines.add("E|2f|3j");
+        lines.add("E|2b|3m");
+        lines.add("E|3f|4a");
+        lines.add("E|3f|4b");
+        lines.add("E|3e|4c");
+        lines.add("E|3f|4d");
+    }
+}

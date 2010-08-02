@@ -1,0 +1,12 @@
+---
+layout: default
+title: Helpful Figures
+permalink: /archive/
+---
+<div class="ar_archivelist">
+  <ul class="ar_archiveul">
+    {% for post in site.posts %}
+    <li class="ar_archiveli"><a href="{{ post.url }}">{{ post.title }}</a></li>
+    {% endfor %}
+  </ul>
+</div>

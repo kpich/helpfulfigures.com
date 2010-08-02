@@ -1,0 +1,5 @@
+This is the source for the entirety of helpfulfigures.com. It's generated into static html by Jekyll.
+
+The "content" (basically the stuff found in various html pages in _posts/) is licensed under a Creative Commons Attribution-NonCommercial 3.0 License. Basically, as long as you're not directly making money off it, you're almost certainly fine.
+
+As for the code itself, well, use away, however you want. Attribution would be appreciated but is by no means obligatory!

@@ -1,0 +1,54 @@
+
+#title {
+margin-bottom:50px;
+}
+
+.initiallyhidden {
+display:none;
+}
+
+#about {
+width:800px;
+margin-left:auto;
+margin-right:auto;
+}
+
+#maincontent {
+display:inline-block;
+width:960px;
+height:520px;
+}
+
+#lawscanv {
+width:960px;
+margin-left:auto;
+margin-right:auto;
+}
+
+#lawslabel {
+position:relative;
+top:-390px;
+margin-left:auto;
+margin-right:auto;
+width:600px;
+word-wrap:break-word;
+}
+
+#lawslabel, #about {
+font-weight:550;
+color:#4f4f4f;
+font-size:120%;
+}
+
+#lawslabel p {
+text-align: left;
+}
+
+.redacted {
+background-color:black;
+color:black;
+}
+
+#label p {
+text-align:left;
+}

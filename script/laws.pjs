@@ -1,0 +1,231 @@
+/*
+ @pjs preload="/img/laws/bible_active.png";
+      preload="/img/laws/bible_inactive.png";
+      preload="/img/laws/cheney_active.png";
+      preload="/img/laws/cheney_inactive.png";
+      preload="/img/laws/document_active.png";
+      preload="/img/laws/document_inactive.png";
+      preload="/img/laws/dollar_active.png";
+      preload="/img/laws/dollar_inactive.png";
+      preload="/img/laws/gavel_active.png";
+      preload="/img/laws/gavel_inactive.png";
+      preload="/img/laws/skinlaw_active.png";
+      preload="/img/laws/skinlaw_inactive.png";
+      preload="/img/laws/whitehouse_active.png";
+      preload="/img/laws/whitehouse_inactive.png";
+      preload="/img/laws/l_arr.png";
+      preload="/img/laws/r_arr.png";
+ */
+
+/* 2010, Karl Pichotta.
+    Use this code however you want.
+    If you use the "content" (anything stored in the variable BOXES), then attribute it to me. kthxbai.
+*/
+
+
+float IMG_WIDTH = 100;
+float IMG_HEIGHT = 101;
+float ARR_WIDTH = 50;
+float ARR_HEIGHT = 75;
+Coord[] COORDS = [
+    new Coord(19,  20),
+    new Coord(156, 20),
+    new Coord(293, 20),
+    new Coord(430, 20),
+    new Coord(567, 20),
+    new Coord(704, 20),
+    new Coord(841, 20),
+];
+
+L_ARR_COORD = new Coord(50, 200);
+R_ARR_COORD = new Coord(860, 200);
+
+int NUM_IMGS = 7;
+PImage [] activeimgs = new PImage[NUM_IMGS];
+PImage [] inactiveimgs = new PImage[NUM_IMGS];
+PImage lArr;
+PImage rArr;
+
+int curDimensionNum = 0;
+
+boolean needRedraw = true;
+int curActiveIndex = 0;
+
+void setup() {
+    activeimgs[0]   = loadImage("/img/laws/document_active.png");
+    inactiveimgs[0] = loadImage("/img/laws/document_inactive.png");
+    activeimgs[1]   = loadImage("/img/laws/bible_active.png");
+    inactiveimgs[1] = loadImage("/img/laws/bible_inactive.png");
+    activeimgs[2]   = loadImage("/img/laws/dollar_active.png");
+    inactiveimgs[2] = loadImage("/img/laws/dollar_inactive.png");
+    activeimgs[3]   = loadImage("/img/laws/cheney_active.png");
+    inactiveimgs[3] = loadImage("/img/laws/cheney_inactive.png");
+    activeimgs[4]   = loadImage("/img/laws/whitehouse_active.png");
+    inactiveimgs[4] = loadImage("/img/laws/whitehouse_inactive.png");
+    activeimgs[5]   = loadImage("/img/laws/skinlaw_active.png");
+    inactiveimgs[5] = loadImage("/img/laws/skinlaw_inactive.png");
+    activeimgs[6]   = loadImage("/img/laws/gavel_active.png");
+    inactiveimgs[6] = loadImage("/img/laws/gavel_inactive.png");
+    lArr = loadImage("/img/laws/l_arr.png");
+    rArr = loadImage("/img/laws/r_arr.png");
+    size(960, 520);
+    showAppropriateLabel();
+}
+
+void draw() {
+    if(needRedraw) {
+        needRedraw = false;
+        background(255);
+	showAppropriateLabel();
+	highlightAppropriateImages();
+	drawArrows();
+    }
+
+}
+
+void mouseClicked() {
+    int ind = getClickedImgIndex();
+    if(ind != -1) {
+	curActiveIndex = ind;
+	needRedraw = true;
+    }
+    else if(clickingLeftArrow()) {
+	curActiveIndex -= 1;
+	if(curActiveIndex < 0) curActiveIndex += NUM_IMGS;
+	needRedraw = true;
+    }
+    else if(clickingRightArrow()) {
+	curActiveIndex = (curActiveIndex + 1) % NUM_IMGS;
+	needRedraw = true;
+    }
+}
+
+void showAppropriateLabel() {
+    for(int i = 0; i < NUM_IMGS; i++)
+	document.getElementById('sec' + i).style.display= "none";
+    if(curActiveIndex != -1)
+	document.getElementById('sec' + curActiveIndex).style.display="block";
+}
+
+void highlightAppropriateImages() {
+    for(int i = 0; i < NUM_IMGS; i++) {
+	if(i == curActiveIndex) {
+	    image(activeimgs[i], COORDS[i].x, COORDS[i].y);
+	}
+	else {
+	    image(inactiveimgs[i], COORDS[i].x, COORDS[i].y);
+	}
+    }
+}
+
+boolean clickingLeftArrow() {
+    return (
+	mouseX > L_ARR_COORD.x &&
+	mouseX < L_ARR_COORD.x + ARR_WIDTH &&
+	mouseY > L_ARR_COORD.y &&
+	mouseY < L_ARR_COORD.y + ARR_HEIGHT);
+}
+
+boolean clickingRightArrow() {
+    return (
+	mouseX > R_ARR_COORD.x &&
+	mouseX < R_ARR_COORD.x + ARR_WIDTH &&
+	mouseY > R_ARR_COORD.y &&
+	mouseY < R_ARR_COORD.y + ARR_HEIGHT);
+}
+
+void drawArrows() {
+    image(lArr, L_ARR_COORD.x, L_ARR_COORD.y);
+    image(rArr, R_ARR_COORD.x, R_ARR_COORD.y);
+}
+
+int getClickedImgIndex() {
+    for(int i = 0; i < COORDS.length(); i++) 
+	if(COORDS[i].pointWithinImg(mouseX, mouseY)) return i;
+    return -1
+}
+
+class Coord {
+    int x;
+    int y;
+    Coord(int x, int y) {
+	this.x = x;
+	this.y = y;
+    }
+
+    boolean pointWithinImg(float pX, float pY) {
+	return (pX > x &&
+		pX < x + IMG_WIDTH &&
+		pY > y &&
+		pY < y + IMG_HEIGHT);
+    }
+}
+
+/*
+class Box {
+
+    static int BOX_WIDTH = 30;
+    static int HIGHLIGHTED_BOX_WIDTH = 50;
+
+    int centerX;
+    int centerY;
+    string text;
+    boolean highlighted = false;
+
+    Box(int centerX, int centerY, string text) {
+        this.centerX = centerX;
+        this.centerY = centerY;
+        this.text = text;
+    }
+
+    boolean pointWithinBounds(float x, float y) {
+        int semiwidth = ( highlighted ? HIGHLIGHTED_BOX_WIDTH : BOX_WIDTH ) / 2;
+        return (x > centerX - semiwidth &&
+                x < centerX + semiwidth &&
+                y > centerY - semiwidth &&
+                y < centerY + semiwidth);
+    }
+
+    void display() {
+        if(highlighted) displayHighlighted();
+        else displayNormal();
+    }
+
+    void displayNormal() {
+        strokeWeight(2);
+        stroke(0);
+        fill(100, 100, 190, 100);
+        rectMode(CENTER);
+        rect(centerX, centerY, BOX_WIDTH, BOX_WIDTH);
+    }
+
+    void displayHighlighted() {
+        strokeWeight(4);
+        stroke(0);
+        fill(100, 190, 100, 100);
+        rectMode(CENTER);
+        rect(centerX, centerY, HIGHLIGHTED_BOX_WIDTH, HIGHLIGHTED_BOX_WIDTH);
+    }
+
+}
+
+
+Box[] BOXES = [
+new Box(326, 389, "<h2>Medulla oblongata</h2><p/>Responsible for the regulation of lower-level autonomic functions such as breathing and heart rate; responsible for higher-order mathematical reasoning."),
+new Box(295, 351, "<h2>Pons</h2><p/>This part of the brain is completely unused in human beings, though it is can be activated remotely via very specialized Ultra-Low Frequency signals. It is generally believed that the race of aliens responsible for creating us will, at some point, simultaneously activate the pons of every living human, thus creating a single enormous \"super-brain\" capable of waging planet-scale warfare."),
+new Box(378, 319, "<h2>Cerebellum</h2><p/>\"The adversary\". A person's cerebellum takes an active role in attempting to destroy her. That is to say, the rest of the brain is active in the regulation of autonomic processes, cognition, processing sensory input, storing memory, etc. The cerebellum, on the other hand, has one and only one peculiar goal: to get its owner to destroy himself or herself. <p/>The cerebellum operates completely autonomously and independently of the rest of the brain. The full significance (and evolutionary advantage) of this adversarial role is not yet understood. Thankfully, the rest of the brain is bigger and smarter, so the cerebellum hardly ever achieves its goal of self-destruction. It does, however, play a prominent role in the explanation of the manifold instances of human idiocy."),
+new Box(245, 225, "<h2>Thalamus</h2><p/>Keeps track, at all times, of the location of the nearest Arby's."),
+new Box(171, 274, "<h2>Hypothalamus</h2><p/>Plots revenge."),
+new Box(213, 277, "<h2>Amygdala</h2><p/>The amygdala is the seat of man's more base reflexes and instincts. Individuals with overactive amygdalas display significantly more untamed and feral behavior. <p/>For example, the celebrated hyperamygdalic patient \"K von M\" was known for uncontrollably licking anyone in his vicinity. Another hyperamygdalic, \"JV\", possessed a mothlike attraction to fires, which ultimately led to his unintentional auto-incineratory demise."),
+new Box(365, 244, "<h2>Fusiform gyrus</h2><p/>Assists primarily in the recognition of faces and commonly-encountered symbols. <p/>One of the more peculiar instances of an individual with a damaged fusiform area was noted patient PME, who thought that every word she saw in print was \"murder\".<p/>Listen to a recording of her:<embed src=\"audio/pme.mp3\" autoplay=\"false\" height=\"60px\"></embed>"),
+new Box(405, 129, "<h2>Precuneus</h2><p/>Responsible for worrying about goiters, thinking about animals dancing."),
+new Box(43, 235, "<h2>Orbitofrontal cortex</h2><p/>\"The homosexual switch\". This brain region completely determines sexual orientation; it has exactly two configurations &mdash; \"gay\" and \"straight.\" It does not play a role otherwise in human cognition."),
+new Box(88, 88, "<h2>Superior frontal gyrus</h2><p/>Responsible for self-awareness, feelings of inadequacy, self-loathing, and the production of shitty poetry. <p/>Studies have correlated high levels of activity in the superior frontal gyrus with exposure to The Cure and interaction with French art."),
+new Box(157, 184, "<h2>Broca's area</h2><p/>Colloquially referred to as the \"<i>je ne sais pas</i> gland,\" this area is responsible for determining exactly how compelling and electrifying an individual's personality is.<p/>Broca's area has borne this name since the mid-19th century, when Paul Pierre Broca observationally linked deficiencies in this region to hella boring dudes (a condition now known as \"Broca's aphasia\", which is exhibited by such public figures as John Kerry and Dr. Phil)."),
+new Box(237, 91, "<h2>Primary somatosensory cortex</h2><p/>Responsible for handling sensory input from various parts of the body.<p/>It is something of an open secret among supervillains that one can point a high-powered laser at one's somatosensory cortex and thereby gain superhuman strength."),
+new Box(350, 74, "<h2>Posterior parietal cortex</h2><p/>This is the part of the brain that hates John Travolta."),
+new Box(277, 157, "<h2>Cingulate cortex</h2><p/> This part of the brain is responsible for regulating a good many aspects of the body. For example, the anterior cingulate cortex is responsible for regulating the body's melancholic humour levels and, additionally, ensuring one's heart skips a beat when in the presence of some varieties of teen heartthrob."),
+new Box(453, 210, "<h2>Primary visual cortex</h2><p/>This region is responsible for causing you to see those Shadowy Horrors, those Unspeakable Things, so many years ago now. O! would that death had taken you and peremptorily stilled the damn&egrave;d taxis of your eyes! O! that some force had stayed proper neuronal activity within your visual cortex! Then could you sleep soundly at night; then would you remain unburdened by the sights of that Terrible Day!"),
+];
+
+*/

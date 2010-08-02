@@ -1,0 +1,163 @@
+/* @pjs preload="/img/afghan-war-diary/map.png"; 
+        preload="/img/afghan-war-diary/inactive_x.png"; 
+        preload="/img/afghan-war-diary/active_x.png"; 
+        preload="/img/afghan-war-diary/l_arr.png"; 
+        preload="/img/afghan-war-diary/r_arr.png"; 
+ */
+
+/* 2010, Karl Pichotta.
+    Use this code however you want. Please attribute to me any of the "content" (the text in the index.html page).
+*/
+
+PImage mapImg;
+PImage activeXImg;
+PImage inactiveXImg;
+PImage lArrImg;
+PImage rArrImg;
+int curActiveIndex = 0;
+int[] curRadii;
+
+int MAP_X = 100;
+int MAP_Y = 0;
+int L_ARR_X = 0;
+int L_ARR_Y = 125;
+int R_ARR_X = 520;
+int R_ARR_Y = 125;
+
+boolean needRedraw = true;
+
+//these are relative to the map, not relative to the whole shebang.
+Loc[] LOCS = [
+    new Loc(52, 234), //Farah
+    new Loc(80, 310), //Dishu
+    new Loc(86, 141), //Qal'eh-ye Now
+    new Loc(122, 265), //Lashkar Gah
+    new Loc(152, 156), //Chaghcharan
+    new Loc(170, 228), //Tarin Kowt
+    new Loc(186, 75), //Sheberghan
+    new Loc(249, 163), //Kowt-e Ashrow
+    new Loc(271, 156), //Kabul
+    new Loc(282, 134), //Mahmud-e Raqi
+    new Loc(315, 58), //Feyzabad
+];
+
+void setup() {
+    mapImg = loadImage("/img/afghan-war-diary/map.png");
+    activeXImg = loadImage("/img/afghan-war-diary/active_x.png");
+    inactiveXImg = loadImage("/img/afghan-war-diary/inactive_x.png");
+    lArrImg = loadImage("/img/afghan-war-diary/l_arr.png");
+    rArrImg = loadImage("/img/afghan-war-diary/r_arr.png");
+    size(600, 355);
+    resetHighlight();
+    showAppropriateLabel();
+}
+
+void draw() {
+    if(needRedraw) {
+        needRedraw = false;
+        background(255);
+        image(lArrImg, L_ARR_X, L_ARR_Y);
+        image(mapImg, MAP_X, MAP_Y);
+        image(rArrImg, R_ARR_X, R_ARR_Y);
+        showAppropriateLabel();
+        for(int i = 0; i < LOCS.length(); i++) {
+            if(curActiveIndex != i) LOCS[i].display();
+        }
+        if(curActiveIndex != -1) LOCS[curActiveIndex].display();
+    }
+}
+
+
+void mouseClicked() {
+    int ind = getClickedLocIndex();
+    if(ind != -1) {
+        curActiveIndex = ind;
+        resetHighlight();
+        needRedraw = true;
+    }
+    else if(clickingLeftArrow()) {
+        curActiveIndex -= 1;
+        if(curActiveIndex < 0) curActiveIndex += LOCS.length();
+        resetHighlight();
+        needRedraw = true;
+    }
+    else if(clickingRightArrow()) {
+        curActiveIndex = (curActiveIndex + 1) % LOCS.length();
+        resetHighlight();
+        needRedraw = true;
+    }
+}
+
+int getClickedLocIndex() {
+    for(int i = 0; i < LOCS.length(); i++) 
+        if(LOCS[i].pointWithinBounds(mouseX - MAP_X, mouseY - MAP_Y)) return i;
+    return -1
+}
+
+void resetHighlight() {
+    for(int i = 0; i < LOCS.length(); i++) LOCS[i].highlighted = (i == curActiveIndex);
+}
+
+void showAppropriateLabel() {
+    for(int i = 0; i < LOCS.length(); i++)
+        document.getElementById('sec' + i).style.display= "none";
+    if(curActiveIndex != -1)
+        document.getElementById('sec' + curActiveIndex).style.display="block";
+}
+
+
+
+
+boolean clickingLeftArrow() {
+    return mouseX > L_ARR_X &&
+           mouseX < L_ARR_X + 50 &&
+           mouseY > L_ARR_Y &&
+           mouseY < L_ARR_Y + 100;
+}
+
+boolean clickingRightArrow() {
+    return mouseX > R_ARR_X &&
+           mouseX < R_ARR_X + 50 &&
+           mouseY > R_ARR_Y &&
+           mouseY < R_ARR_Y + 100;
+}
+
+class Loc {
+
+    static int INACTIVE_WIDTH = 25;
+    static int ACTIVE_WIDTH = 40;
+
+    int centerX;
+    int centerY;
+    boolean highlighted = false;
+
+    Loc(int centerX, int centerY) {
+        this.centerX = centerX;
+        this.centerY = centerY;
+    }
+
+    boolean pointWithinBounds(float x, float y) {
+        int semiwidth = ( highlighted ? ACTIVE_WIDTH : INACTIVE_WIDTH ) / 2;
+        return (x > centerX - semiwidth &&
+                x < centerX + semiwidth &&
+                y > centerY - semiwidth &&
+                y < centerY + semiwidth);
+    }
+
+    void display() {
+        if(highlighted) displayActive();
+        else displayInactive();
+    }
+
+    void displayInactive() {
+        image(inactiveXImg, MAP_X + centerX - INACTIVE_WIDTH/2.0, MAP_Y + centerY - INACTIVE_WIDTH/2.0);
+    }
+
+    void displayActive() {
+        image(activeXImg, MAP_X + centerX - ACTIVE_WIDTH/2.0, MAP_Y + centerY - ACTIVE_WIDTH/2.0);
+    }
+
+}
+
+
+
