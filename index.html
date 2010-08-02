@@ -3,25 +3,26 @@ layout: none
 ---
 <html>
 <head>
-   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-   <title>Helpful Figures</title>
-   <link rel="stylesheet" href="/style/global.css" type="text/css" />
-     {% for f in site.posts[0].stylefiles %}
-     <link rel="stylesheet" href="{{ f }}" type="text/css" />
-     {% endfor %}
-     {% for f in site.posts[0].scriptfiles %}
-     <script src="{{ f }}"></script>
-     {% endfor %}
-    <script type="text/javascript">
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-17759249-1']);
-      _gaq.push(['_trackPageview']);
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    </script>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Helpful Figures</title>
+  <link rel="stylesheet" href="/style/global.css" type="text/css" />
+  {% for f in site.posts[0].stylefiles %}
+  <link rel="stylesheet" href="{{ f }}" type="text/css" />
+  {% endfor %}
+  {% for f in site.posts[0].scriptfiles %}
+  <script src="{{ f }}"></script>
+  {% endfor %}
+  <link rel="icon" type="image/vnd.microsoft.icon" href="/favicon.ico">
+  <script type="text/javascript">
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-17759249-1']);
+  _gaq.push(['_trackPageview']);
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+  </script>
 </head>
 <body>
 <div id="g_header">
