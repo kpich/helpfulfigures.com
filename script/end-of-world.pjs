@@ -1,0 +1,110 @@
+/* @pjs preload="/img/end-of-world/map.png"; 
+        preload="/img/end-of-world/l_arr.png"; 
+        preload="/img/end-of-world/r_arr.png"; 
+        preload="/img/end-of-world/usa.png";
+        preload="/img/end-of-world/s_america.png";
+        preload="/img/end-of-world/canada.png";
+        preload="/img/end-of-world/africa.png";
+        preload="/img/end-of-world/n_europe.png";
+        preload="/img/end-of-world/s_europe.png";
+        preload="/img/end-of-world/mideast.png";
+        preload="/img/end-of-world/jerusalem.png";
+        preload="/img/end-of-world/e_europe.png";
+        preload="/img/end-of-world/c_asia.png";
+        preload="/img/end-of-world/s_asia.png";
+        preload="/img/end-of-world/e_asia.png";
+        preload="/img/end-of-world/n_korea.png";
+        preload="/img/end-of-world/se_asia.png";
+        preload="/img/end-of-world/oceania.png";
+ */
+
+/* 2010, Karl Pichotta.
+    Use this code however you want. Please attribute to me any of the "content" (the text in the html page).
+*/
+
+PImage mapImg;
+int NUM_REGIONS = 15;
+PImage[] regionImages = new PImage[NUM_REGIONS];
+PImage lArrImg;
+PImage rArrImg;
+int curActiveIndex = 0;
+
+int L_ARR_X = 0;
+int L_ARR_Y = 385;
+int R_ARR_X = 750;
+int R_ARR_Y = 385;
+
+boolean needRedraw = true;
+
+void setup() {
+    mapImg = loadImage("/img/end-of-world/map.png");
+    lArrImg = loadImage("/img/end-of-world/l_arr.png");
+    rArrImg = loadImage("/img/end-of-world/r_arr.png");
+    regionImages[0] = loadImage("/img/end-of-world/usa.png");
+    regionImages[1] = loadImage("/img/end-of-world/s_america.png");
+    regionImages[2] = loadImage("/img/end-of-world/canada.png");
+    regionImages[3] = loadImage("/img/end-of-world/africa.png");
+    regionImages[4] = loadImage("/img/end-of-world/n_europe.png");
+    regionImages[5] = loadImage("/img/end-of-world/s_europe.png");
+    regionImages[6] = loadImage("/img/end-of-world/mideast.png");
+    regionImages[7] = loadImage("/img/end-of-world/jerusalem.png");
+    regionImages[8] = loadImage("/img/end-of-world/e_europe.png");
+    regionImages[9] = loadImage("/img/end-of-world/c_asia.png");
+    regionImages[10] = loadImage("/img/end-of-world/s_asia.png");
+    regionImages[11] = loadImage("/img/end-of-world/e_asia.png");
+    regionImages[12] = loadImage("/img/end-of-world/n_korea.png");
+    regionImages[13] = loadImage("/img/end-of-world/se_asia.png");
+    regionImages[14] = loadImage("/img/end-of-world/oceania.png");
+    size(800, 575);
+    showAppropriateLabel();
+}
+
+void draw() {
+    if(needRedraw) {
+        needRedraw = false;
+        background(255);
+        image(mapImg, 0, 0);
+        image(lArrImg, L_ARR_X, L_ARR_Y);
+        image(rArrImg, R_ARR_X, R_ARR_Y);
+        showAppropriateLabel();
+        showAppropriateHighlight();
+    }
+}
+
+void mouseClicked() {
+    if(clickingLeftArrow()) {
+        curActiveIndex -= 1;
+        if(curActiveIndex < 0) curActiveIndex += NUM_REGIONS;
+        needRedraw = true;
+    }
+    else if(clickingRightArrow()) {
+        curActiveIndex = (curActiveIndex + 1) % NUM_REGIONS;
+        needRedraw = true;
+    }
+}
+
+void showAppropriateHighlight() {
+    image(regionImages[curActiveIndex], 0, 0);
+}
+
+void showAppropriateLabel() {
+    for(int i = 0; i < NUM_REGIONS; i++)
+        document.getElementById('sec' + i).style.display= "none";
+    if(curActiveIndex != -1)
+        document.getElementById('sec' + curActiveIndex).style.display="block";
+}
+
+boolean clickingLeftArrow() {
+    return mouseX > L_ARR_X &&
+           mouseX < L_ARR_X + 50 &&
+           mouseY > L_ARR_Y &&
+           mouseY < L_ARR_Y + 100;
+}
+
+boolean clickingRightArrow() {
+    return mouseX > R_ARR_X &&
+           mouseX < R_ARR_X + 50 &&
+           mouseY > R_ARR_Y &&
+           mouseY < R_ARR_Y + 100;
+}
+

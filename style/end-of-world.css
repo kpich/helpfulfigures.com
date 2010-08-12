@@ -1,0 +1,43 @@
+#title {
+margin-bottom:25px;
+}
+
+.initiallyhidden {
+display:none;
+}
+
+#about {
+width:800px;
+margin-left:auto;
+margin-right:auto;
+text-align:left;
+}
+
+#canv {
+width:800px;
+height:575px;
+margin-left:auto;
+margin-right:auto;
+/*border: 2px solid;*/
+}
+
+#label {
+text-align:left;
+position:relative;
+margin-left:auto;
+margin-right:auto;
+margin-top: -210px;
+width:600px;
+height:210px;
+}
+
+#label, #about {
+font-weight:550;
+color:#4f4f4f;
+font-size:120%;
+}
+
+#label p {
+text-align: left;
+}
+
