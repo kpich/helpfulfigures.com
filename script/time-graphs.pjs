@@ -1,0 +1,131 @@
+/*
+ @pjs preload="/img/time-graphs/l_arr.png";
+      preload="/img/time-graphs/r_arr.png";
+      preload="/img/time-graphs/plot0.png";
+      preload="/img/time-graphs/plot1.png";
+      preload="/img/time-graphs/plot2.png";
+      preload="/img/time-graphs/plot3.png";
+      preload="/img/time-graphs/plot4.png";
+ */
+
+/* 2010, Karl Pichotta.
+    Use this code however you want.
+    All the "content" (the pictures, I guess) is CC-BY-NC licensed.
+*/
+
+
+float ARR_WIDTH = 50;
+float ARR_HEIGHT = 75;
+
+int NUM_GRAPHS = 5;
+
+L_ARR_COORD = new Coord(190, 90);
+R_ARR_COORD = new Coord(680, 90);
+GRAPH_COORD = new Coord(285, 10);
+
+int NUM_TIMES_TO_DRAW_PLOT = 15;
+
+PImage lArr;
+PImage rArr;
+
+boolean needRedraw = true;
+int numDrawnPlotFrames = 0;
+
+int curGraphIndex = 0;
+
+void setup() {
+    lArr = loadImage("/img/time-graphs/l_arr.png");
+    rArr = loadImage("/img/time-graphs/r_arr.png");
+    size(920, 440);
+}
+
+void draw() {
+    if(needRedraw) {
+        if(numDrawnPlotFrames == 0) {
+            updateCountNum();
+            showAppropriateLabel();
+        }
+        background(255);
+        drawArrows();
+        drawPlots();
+        if(++numDrawnPlotFrames >= NUM_TIMES_TO_DRAW_PLOT) needRedraw = false;
+    }
+}
+
+void drawPlots() {
+    tint(255, numDrawnPlotFrames * 20);
+    image(loadImage("/img/time-graphs/plot" + curGraphIndex + ".png"), GRAPH_COORD.x, GRAPH_COORD.y);
+    tint(255, 255);
+}
+
+void mouseClicked() {
+    int ind = getClickedDotIndex();
+    if(ind != -1 && int != curGraphIndex) {
+	curGraphIndex = ind;
+	needRedraw = true;
+        numDrawnPlotFrames = 0;
+    }
+    else if(clickingLeftArrow()) {
+	curGraphIndex--;
+	if(curGraphIndex < 0) curGraphIndex += NUM_GRAPHS;
+	needRedraw = true;
+        numDrawnPlotFrames = 0;
+    }
+    else if(clickingRightArrow()) {
+        curGraphIndex++;
+        if(curGraphIndex >= NUM_GRAPHS) curGraphIndex = 0;
+	needRedraw = true;
+        numDrawnPlotFrames = 0;
+    }
+}
+
+boolean clickingLeftArrow() {
+    return (
+	mouseX > L_ARR_COORD.x &&
+	mouseX < L_ARR_COORD.x + ARR_WIDTH &&
+	mouseY > L_ARR_COORD.y &&
+	mouseY < L_ARR_COORD.y + ARR_HEIGHT);
+}
+
+boolean clickingRightArrow() {
+    return (
+	mouseX > R_ARR_COORD.x &&
+	mouseX < R_ARR_COORD.x + ARR_WIDTH &&
+	mouseY > R_ARR_COORD.y &&
+	mouseY < R_ARR_COORD.y + ARR_HEIGHT);
+}
+
+void drawArrows() {
+    image(lArr, L_ARR_COORD.x, L_ARR_COORD.y);
+    image(rArr, R_ARR_COORD.x, R_ARR_COORD.y);
+}
+
+int getClickedDotIndex() {
+    for(int i = 0; i < NUM_GRAPHS; i++) 
+	if(pointInDot(mouseX, mouseY, i)) return i;
+    return -1
+}
+
+boolean pointInDot(float pX, float pY, int dotNum) {
+    return false;
+}
+
+void updateCountNum() {
+    document.getElementById('graphnum').innerHTML = (curGraphIndex + 1);
+}
+
+void showAppropriateLabel() {
+    for(int i = 0; i < NUM_GRAPHS; i++)
+	document.getElementById('sec' + i).style.display= "none";
+    if(curGraphIndex != -1)
+	document.getElementById('sec' + curGraphIndex).style.display="block";
+}
+
+class Coord {
+    int x;
+    int y;
+    Coord(int x, int y) {
+	this.x = x;
+	this.y = y;
+    }
+}

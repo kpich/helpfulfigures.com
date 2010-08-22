@@ -1,0 +1,54 @@
+.initiallyhidden {
+display:none;
+}
+
+#title {
+margin-bottom:30px;
+}
+
+#about {
+width:800px;
+margin-left:auto;
+margin-right:auto;
+}
+
+#maincontent {
+display:inline-block;
+width:920px;
+height:440px;
+}
+
+#canv {
+width:920px;
+margin-left:auto;
+margin-right:auto;
+}
+
+#label, #about {
+font-weight:550;
+color:#4f4f4f;
+font-size:120%;
+}
+
+#label {
+position:relative;
+top:-170px;
+left:50px;
+margin-left:auto;
+margin-right:auto;
+width:500px;
+}
+
+#count {
+font-size:200%;
+}
+
+.axiskey {
+text-align: left;
+}
+
+td {
+vertical-align:top;
+padding-left:10px;
+padding-top:10px;
+}
