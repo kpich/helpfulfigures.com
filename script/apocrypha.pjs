@@ -1,0 +1,175 @@
+/*
+ @pjs preload="/img/apocrypha/dickens_active.png";
+      preload="/img/apocrypha/dickens_inactive.png";
+      preload="/img/apocrypha/homer_active.png";
+      preload="/img/apocrypha/homer_inactive.png";
+      preload="/img/apocrypha/jesus_active.png";
+      preload="/img/apocrypha/jesus_inactive.png";
+      preload="/img/apocrypha/joyce_active.png";
+      preload="/img/apocrypha/joyce_inactive.png";
+      preload="/img/apocrypha/leox_active.png";
+      preload="/img/apocrypha/leox_inactive.png";
+      preload="/img/apocrypha/rand_active.png";
+      preload="/img/apocrypha/rand_inactive.png";
+      preload="/img/apocrypha/shakespeare_active.png";
+      preload="/img/apocrypha/shakespeare_inactive.png";
+      preload="/img/apocrypha/l_arr.png";
+      preload="/img/apocrypha/r_arr.png";
+ */
+
+/* 2010, Karl Pichotta.
+    Use this code however you want.
+    If you use the "content" (anything stored in the variable BOXES), then attribute it to me. kthxbai.
+*/
+
+
+int LAB_DEFAULT_TOP_POS = -415;
+int IMG_WIDTH = 50;
+int IMG_HEIGHT = 50;
+int IMG_PAD = 0;
+int ARR_WIDTH = 50;
+int ARR_HEIGHT = 75;
+Coord[] COORDS = [
+    new Coord(19,  80),
+    new Coord(19, 130),
+    new Coord(19, 180),
+    new Coord(19, 230),
+    new Coord(19, 280),
+    new Coord(19, 330),
+    new Coord(19, 380),
+];
+
+U_ARR_DEFAULT_COORD = new Coord(50, 0);
+D_ARR_DEFAULT_COORD = new Coord(140, 0);
+
+uArrCoord = new Coord(U_ARR_DEFAULT_COORD.x, U_ARR_DEFAULT_COORD.y);
+dArrCoord = new Coord(D_ARR_DEFAULT_COORD.x, D_ARR_DEFAULT_COORD.y);
+
+int NUM_IMGS = 7;
+PImage [] activeimgs = new PImage[NUM_IMGS];
+PImage [] inactiveimgs = new PImage[NUM_IMGS];
+PImage lArr;
+PImage rArr;
+
+int curDimensionNum = 0;
+
+boolean needRedraw = true;
+int curActiveIndex = 0;
+
+void setup() {
+    activeimgs[0]   = loadImage("/img/apocrypha/homer_active.png");
+    inactiveimgs[0] = loadImage("/img/apocrypha/homer_inactive.png");
+    activeimgs[1]   = loadImage("/img/apocrypha/jesus_active.png");
+    inactiveimgs[1] = loadImage("/img/apocrypha/jesus_inactive.png");
+    activeimgs[2]   = loadImage("/img/apocrypha/leox_active.png");
+    inactiveimgs[2] = loadImage("/img/apocrypha/leox_inactive.png");
+    activeimgs[3]   = loadImage("/img/apocrypha/shakespeare_active.png");
+    inactiveimgs[3] = loadImage("/img/apocrypha/shakespeare_inactive.png");
+    activeimgs[4]   = loadImage("/img/apocrypha/dickens_active.png");
+    inactiveimgs[4] = loadImage("/img/apocrypha/dickens_inactive.png");
+    activeimgs[5]   = loadImage("/img/apocrypha/joyce_active.png");
+    inactiveimgs[5] = loadImage("/img/apocrypha/joyce_inactive.png");
+    activeimgs[6]   = loadImage("/img/apocrypha/rand_active.png");
+    inactiveimgs[6] = loadImage("/img/apocrypha/rand_inactive.png");
+    lArr = loadImage("/img/apocrypha/l_arr.png");
+    rArr = loadImage("/img/apocrypha/r_arr.png");
+    size(960, 480);
+    showAndPositionAppropriateLabel();
+    positionArrows();
+}
+
+void draw() {
+    if(needRedraw) {
+        needRedraw = false;
+        background(255);
+	showAndPositionAppropriateLabel();
+	highlightAppropriateImages();
+        positionArrows();
+	drawArrows();
+    }
+
+}
+
+void mouseClicked() {
+    int ind = getClickedImgIndex();
+    if(ind != -1) {
+	curActiveIndex = ind;
+	needRedraw = true;
+    }
+    else if(clickingLeftArrow()) {
+	curActiveIndex -= 1;
+	if(curActiveIndex < 0) curActiveIndex += NUM_IMGS;
+	needRedraw = true;
+    }
+    else if(clickingRightArrow()) {
+	curActiveIndex = (curActiveIndex + 1) % NUM_IMGS;
+	needRedraw = true;
+    }
+}
+
+void showAndPositionAppropriateLabel() {
+    for(int i = 0; i < NUM_IMGS; i++)
+	document.getElementById('sec' + i).style.display= "none";
+    if(curActiveIndex != -1)
+	document.getElementById('sec' + curActiveIndex).style.display="block";
+    document.getElementById('label').style.top = '' + ( LAB_DEFAULT_TOP_POS + (IMG_HEIGHT + IMG_PAD) * curActiveIndex ) + 'px';
+}
+
+void positionArrows() {
+//    uArrCoord.y = U_ARR_DEFAULT_COORD.y + (curActiveIndex * (IMG_HEIGHT + IMG_PAD));
+//    dArrCoord.y = D_ARR_DEFAULT_COORD.y + (curActiveIndex * (IMG_HEIGHT + IMG_PAD));
+}
+
+void highlightAppropriateImages() {
+    for(int i = 0; i < NUM_IMGS; i++) {
+	if(i == curActiveIndex) {
+	    image(activeimgs[i], COORDS[i].x, COORDS[i].y);
+	}
+	else {
+	    image(inactiveimgs[i], COORDS[i].x, COORDS[i].y);
+	}
+    }
+}
+
+boolean clickingLeftArrow() {
+    return (
+	mouseX > uArrCoord.x &&
+	mouseX < uArrCoord.x + ARR_WIDTH &&
+	mouseY > uArrCoord.y &&
+	mouseY < uArrCoord.y + ARR_HEIGHT);
+}
+
+boolean clickingRightArrow() {
+    return (
+	mouseX > dArrCoord.x &&
+	mouseX < dArrCoord.x + ARR_WIDTH &&
+	mouseY > dArrCoord.y &&
+	mouseY < dArrCoord.y + ARR_HEIGHT);
+}
+
+void drawArrows() {
+    image(lArr, uArrCoord.x, uArrCoord.y);
+    image(rArr, dArrCoord.x, dArrCoord.y);
+}
+
+int getClickedImgIndex() {
+    for(int i = 0; i < COORDS.length(); i++) 
+	if(COORDS[i].pointWithinImg(mouseX, mouseY)) return i;
+    return -1
+}
+
+class Coord {
+    int x;
+    int y;
+    Coord(int x, int y) {
+	this.x = x;
+	this.y = y;
+    }
+
+    boolean pointWithinImg(float pX, float pY) {
+	return (pX > x &&
+		pX < x + IMG_WIDTH &&
+		pY > y &&
+		pY < y + IMG_HEIGHT);
+    }
+}
