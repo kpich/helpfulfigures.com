@@ -15,13 +15,12 @@ width:650px;
 }
 
 #maincontent {
-display:inline-block;
-width:960px;
+width:680px;
 height:480px;
 }
 
 #canv {
-width:960px;
+width:680px;
 margin-left:auto;
 margin-right:auto;
 }

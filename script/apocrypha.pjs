@@ -73,7 +73,7 @@ void setup() {
     inactiveimgs[6] = loadImage("/img/apocrypha/rand_inactive.png");
     lArr = loadImage("/img/apocrypha/l_arr.png");
     rArr = loadImage("/img/apocrypha/r_arr.png");
-    size(960, 480);
+    size(680, 480);
     showAndPositionAppropriateLabel();
     positionArrows();
 }
