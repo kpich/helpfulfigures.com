@@ -1,0 +1,123 @@
+/*
+ @pjs preload="/img/earth-layers/earth.png";
+      preload="/img/earth-layers/layer0.png";
+      preload="/img/earth-layers/layer1.png";
+      preload="/img/earth-layers/layer2.png";
+      preload="/img/earth-layers/layer3.png";
+      preload="/img/earth-layers/layer4.png";
+      preload="/img/earth-layers/layer5.png";
+      preload="/img/earth-layers/layer6.png";
+      preload="/img/earth-layers/layer7.png";
+      preload="/img/earth-layers/layer8.png";
+      preload="/img/earth-layers/layer9.png";
+      preload="/img/earth-layers/layer10.png";
+      preload="/img/earth-layers/l_arr.png";
+      preload="/img/earth-layers/layer7.png";
+      preload="/img/earth-layers/r_arr.png";
+ */
+
+/* 2010, Karl Pichotta.
+    Use this code however you want.
+    If you use the "content" (anything stored in the variable BOXES), then attribute it to me. kthxbai.
+*/
+
+
+int IMG_X = 40;
+int IMG_Y = 40;
+
+int ARR_WIDTH = 50;
+int ARR_HEIGHT = 75;
+
+L_ARR_COORD = new Coord(245, 0);
+R_ARR_COORD = new Coord(335, 0);
+
+int NUM_LAYERS = 11;
+PImage lArr;
+PImage rArr;
+
+int curDimensionNum = 0;
+
+boolean needRedraw = true;
+int curActiveIndex = 0;
+
+void setup() {
+    lArr = loadImage("/img/earth-layers/l_arr.png");
+    rArr = loadImage("/img/earth-layers/r_arr.png");
+    size(680, 600);
+    showAppropriateLabel();
+}
+
+void draw() {
+    if(needRedraw) {
+        needRedraw = false;
+        background(255);
+	showAppropriateLabel();
+        image(loadImage("/img/earth-layers/earth.png"), IMG_X, IMG_Y);
+	showLayer();
+	drawArrows();
+    }
+
+}
+
+void mouseClicked() {
+    if(clickingRightArrow()) {
+	curActiveIndex -= 1;
+	if(curActiveIndex < 0) curActiveIndex += NUM_LAYERS;
+	needRedraw = true;
+    }
+    else if(clickingLeftArrow()) {
+	curActiveIndex = (curActiveIndex + 1) % NUM_LAYERS;
+	needRedraw = true;
+    }
+}
+
+void showAppropriateLabel() {
+    for(int i = 0; i < NUM_LAYERS; i++)
+	document.getElementById('sec' + i).style.display= "none";
+    if(curActiveIndex != -1)
+	document.getElementById('sec' + curActiveIndex).style.display="block";
+}
+
+void showLayer() {
+    image(loadImage("/img/earth-layers/layer" + curActiveIndex + ".png"), IMG_X, IMG_Y);
+}
+
+boolean clickingLeftArrow() {
+    return (
+        leftArrowActive() &
+	mouseX > L_ARR_COORD.x &&
+	mouseX < L_ARR_COORD.x + ARR_WIDTH &&
+	mouseY > L_ARR_COORD.y &&
+	mouseY < L_ARR_COORD.y + ARR_HEIGHT);
+}
+
+boolean clickingRightArrow() {
+    return (
+        rightArrowActive() &&
+	mouseX > R_ARR_COORD.x &&
+	mouseX < R_ARR_COORD.x + ARR_WIDTH &&
+	mouseY > R_ARR_COORD.y &&
+	mouseY < R_ARR_COORD.y + ARR_HEIGHT);
+}
+
+boolean leftArrowActive() {
+    return curActiveIndex < NUM_LAYERS-1;
+}
+
+boolean rightArrowActive() {
+    return curActiveIndex > 0;
+}
+
+void drawArrows() {
+    if(leftArrowActive()) image(lArr, L_ARR_COORD.x, L_ARR_COORD.y);
+    if(rightArrowActive()) image(rArr, R_ARR_COORD.x, R_ARR_COORD.y);
+}
+
+class Coord {
+    int x;
+    int y;
+    Coord(int x, int y) {
+	this.x = x;
+	this.y = y;
+    }
+}
