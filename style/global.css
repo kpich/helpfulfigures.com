@@ -45,13 +45,17 @@ vertical-align:50%;
 }
 
 #p_post {
-min-width:920px;
+min-width:720px;
 }
 
 #p_post, .ab_about, .ar_archivelist {
 display:inline-block;
 border:2px solid;
 background:#FFFFFF;
+}
+
+#p_maincontent {
+    margin:50px;
 }
 
 .ar_archiveli {
