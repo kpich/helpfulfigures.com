@@ -17,6 +17,11 @@ border:none;
 width:100px;
 }
 
+.g_navbar {
+padding-top:10px;
+padding-bottom:10px;
+}
+
 .g_navitem {
 font-size:27px;
 padding-left:20px;
@@ -24,8 +29,14 @@ vertical-align:50%;
 color:#232323;
 }
 
+.g_metainfo {
+font-size:120%;
+padding:10px;
+color:#333333;
+}
+
 a {
-color:#666666;
+color:#464666;
 font-weight:600;
 text-decoration:none;
 }
