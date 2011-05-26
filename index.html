@@ -27,13 +27,16 @@ layout: none
   </script>
 </head>
 <body>
-<div id="g_header">
+<div class="g_header">
   <span class="g_logo"><a href="/"><img src="/img/logo.png"/></a></span>
+</div>
+<div class="g_navbar">
   {% if site.posts[0].previous %}<span class="g_navitem"> <a rel="prev" href="{{ site.posts[0].previous.url }}" title="{{ site.posts[0].previous.title }}" >Previous</a></span>{% endif %}
   {% if site.posts[0].next %}<span class="g_navitem"> <a rel="next" href="{{ site.posts[0].next.url }}" title="{{ site.posts[0].next.title }}" >Next</a></span>{% endif %}
   <span class="g_navitem"><a rel="contents" href="/archive">Archive</a></span>
   <span class="g_navitem"><a rel="help" href="/about">About</a></span>
-  <span class="g_navitem"><a href="http://feeds.feedburner.com/helpfulfigures">RSS</a></span>
+  <span class="g_navitem"><a href="http://feeds.feedburner.com/helpfulfigures">[RSS]</a></span>
+  <span class="g_navitem"><a href="http://twitter.com/kpich">[twttr]</a></span>
 </div>
 <div id="g_maincontent">
   <div id="p_post">
@@ -43,6 +46,15 @@ layout: none
 <div id="g_metainfo">
     {% if site.posts[0].date %} <span>Originally posted on {{ site.posts[0].date | date_to_long_string }}.</span>{% endif %}
     {% if site.posts[0].url %} <span>&nbsp;&nbsp;<a href="{{site.posts[0].url}}">Permalink</a></span> {% endif %}
+</div>
+
+<div class="g_navbar">
+  {% if site.posts[0].previous %}<span class="g_navitem"> <a rel="prev" href="{{ site.posts[0].previous.url }}" title="{{ site.posts[0].previous.title }}" >Previous</a></span>{% endif %}
+  {% if site.posts[0].next %}<span class="g_navitem"> <a rel="next" href="{{ site.posts[0].next.url }}" title="{{ site.posts[0].next.title }}" >Next</a></span>{% endif %}
+  <span class="g_navitem"><a rel="contents" href="/archive">Archive</a></span>
+  <span class="g_navitem"><a rel="help" href="/about">About</a></span>
+  <span class="g_navitem"><a href="http://feeds.feedburner.com/helpfulfigures">[RSS]</a></span>
+  <span class="g_navitem"><a href="http://twitter.com/kpich">[twttr]</a></span>
 </div>
 
 <div id="g_footer">

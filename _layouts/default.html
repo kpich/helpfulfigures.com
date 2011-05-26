@@ -22,19 +22,31 @@
 </head>
 <body>
 
-<div id="g_header">
+<div class="g_header">
   <span class="g_logo"><a href="/"><img src="/img/logo.png"/></a></span>
+</div>
+<div class="g_navbar">
   {% if page.previous %}<span class="g_navitem"> <a rel="prev" href="{{ page.previous.url }}" title="{{ page.previous.title }}" >Previous</a></span>{% endif %}
   {% if page.next %}<span class="g_navitem"> <a rel="next" href="{{ page.next.url }}" title="{{ page.next.title }}" >Next</a></span>{% endif %}
   <span class="g_navitem"><a rel="contents" href="/archive">Archive</a></span>
   <span class="g_navitem"><a rel="help" href="/about">About</a></span>
-  <span class="g_navitem"><a href="http://feeds.feedburner.com/helpfulfigures">RSS</a></span>
+  <span class="g_navitem"><a href="http://feeds.feedburner.com/helpfulfigures">[RSS]</a></span>
+  <span class="g_navitem"><a href="http://twitter.com/kpich">[twttr]</a></span>
 </div>
 <div id="g_maincontent">
   {{ content }}
 </div>
 <div id="g_metainfo">
     {% if page.date %} <span>{{ page.date | date_to_long_string }}.</span>{% endif %}
+</div>
+
+<div class="g_navbar">
+  {% if page.previous %}<span class="g_navitem"> <a rel="prev" href="{{ page.previous.url }}" title="{{ page.previous.title }}" >Previous</a></span>{% endif %}
+  {% if page.next %}<span class="g_navitem"> <a rel="next" href="{{ page.next.url }}" title="{{ page.next.title }}" >Next</a></span>{% endif %}
+  <span class="g_navitem"><a rel="contents" href="/archive">Archive</a></span>
+  <span class="g_navitem"><a rel="help" href="/about">About</a></span>
+  <span class="g_navitem"><a href="http://feeds.feedburner.com/helpfulfigures">[RSS]</a></span>
+  <span class="g_navitem"><a href="http://twitter.com/kpich">[twttr]</a></span>
 </div>
 
 <div id="g_footer">
