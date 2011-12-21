@@ -70,7 +70,13 @@ background:#FFFFFF;
 }
 
 #p_maincontent {
-    margin:50px;
+margin:50px;
+}
+
+.p_extratext {
+margin-top:20px;
+text-align:left;
+font-size:120%;
 }
 
 .ar_archiveli {
